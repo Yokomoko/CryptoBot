@@ -1,0 +1,229 @@
+﻿<UserControl x:Class="CryptoBot.UserControls.BuyScreen"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CryptoBot.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="625">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/Style.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Name="InitialPanel" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Name="uxSelectMarket" Click="uxSelectMarket_Click" Height="40" Width="120" FontSize="16">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Viewbox>
+                            <Grid>
+                                <Grid Name="backgroundGrid" Width="32" Height="32" Visibility="Collapsed" />
+                                <Path Data="M14.522845,21.871246L31.100999,21.871246C31.601003,21.871246,31.999995,22.171253,31.999995,22.67026L31.999995,24.368277C31.999995,24.767283,31.601003,25.167282,31.100999,25.167282L14.522845,25.167282C14.023847,25.167282,13.623851,24.867283,13.623851,24.368277L13.623851,22.67026C13.52482,22.270254,13.92384,21.871246,14.522845,21.871246z M11.626823,12.184142L13.424844,13.981159 3.6377519,24.767283C2.738742,25.666288 1.340719,25.766287 0.54171602,24.967283 -0.25728743,24.16827 -0.15729567,22.77026 0.74171434,21.871246z M24.110946,10.886124C24.509936,10.886124 24.909932,11.085123 25.208947,11.38513 25.807952,11.984136 25.807952,12.983147 25.208947,13.682153L20.714887,18.176207C20.115884,18.775211 19.116881,18.775211 18.41787,18.176207 17.818866,17.5772 17.818866,16.578188 18.41787,15.879183L22.911929,11.38513C23.311927,10.985124,23.710917,10.886124,24.110946,10.886124z M15.920868,3.296042C16.120852,3.296042,16.320866,3.3950423,16.52085,3.4950417L21.912896,8.9880992C22.212918,9.288106,22.212918,9.7871123,21.912896,10.087118L17.119853,14.880172C16.819863,15.18017,16.320866,15.18017,16.020844,14.880172L10.627806,9.4871054C10.328807,9.1881066,10.328807,8.6881009,10.627806,8.3890935L15.421841,3.5950411C15.521848,3.3950423,15.721862,3.296042,15.920868,3.296042z M13.22483,0C13.623851,-1.4650232E-07 14.023847,0.20000667 14.323838,0.49900619 14.922843,1.0990111 14.922843,2.0970236 14.323838,2.7960368L9.8297947,7.1900831C9.2297982,7.7900882 8.2317875,7.7900882 7.5327762,7.1900831 6.9327801,6.5910769 6.9327801,5.5930649 7.6317762,4.9930597L12.12582,0.49900619C12.425826,0.20000667,12.825839,-1.4650232E-07,13.22483,0z" Stretch="Uniform" Fill="#FF000000" Width="32" Height="32" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+                                    <Path.RenderTransform>
+                                        <TransformGroup>
+                                            <TransformGroup.Children>
+                                                <RotateTransform Angle="0" />
+                                                <ScaleTransform ScaleX="1" ScaleY="1" />
+                                            </TransformGroup.Children>
+                                        </TransformGroup>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </Grid>
+                        </Viewbox>
+                        <Label Foreground="{StaticResource Back800}" HorizontalAlignment="Center" VerticalAlignment="Center">Select Market</Label>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+        </StackPanel>
+
+        <StackPanel Grid.Row="0" VerticalAlignment="Top" Name="uxBuySp">
+            <Grid VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="342*"></ColumnDefinition>
+                    <ColumnDefinition Width="75*"/>
+                    <ColumnDefinition Width="208*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <GroupBox Name="uxBuyGb" Grid.Column="0" HorizontalAlignment="Left">
+                    <GroupBox.Header>
+                        <Label Content ="Buy" Name="BuyGroupBoxText" FontFamily="Calibri" Foreground="{StaticResource TitleBrush}" FontWeight="Bold" FontSize="16"/>
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="130"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0">Bid</Label>
+                        <Label Grid.Row="1" Grid.Column="0">Units</Label>
+                        <Label Grid.Row="2" Grid.Column="0">Type</Label>
+                        <Label Grid.Row="3" Grid.Column="0">Time In Force</Label>
+                        <Label Grid.Row="4" Grid.Column="0">Total</Label>
+                        <TextBox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Height="20" Width="80" Name="uxBidTxt" Text="0.00000000" LostFocus="uxBidTxt_LostFocus" TextAlignment="Right" MaxLength="10" PreviewTextInput="TextBox_OnPreviewTextInput"></TextBox>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2" Height="22">
+                            <Label Name="MaxLbl" Grid.Column="0" Grid.Row="0" Content="MAX" FontWeight="Bold">
+                                <Label.Resources>
+                                    <Style TargetType="{x:Type Label}" BasedOn="{StaticResource MenuLabel}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ElementName=uxMaxSwitch, Path=IsChecked}" Value="True" >
+                                                <Setter Property="Foreground" Value="{StaticResource Text200}"></Setter>
+                                                <Setter Property="FontWeight" Value="Normal"></Setter>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ElementName=uxMaxSwitch, Path=IsChecked}" Value="False" >
+                                                <Setter Property="Foreground" Value="{StaticResource TitleBrush}"></Setter>
+                                                <Setter Property="FontWeight" Value="Bold"></Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Label.Resources>
+                            </Label>
+                            <ToggleButton Name="uxMaxSwitch" Style="{StaticResource AnimatedSwitch}" Checked="UxMaxSwitch_OnChecked" Unchecked="UxMaxSwitch_OnChecked">Max</ToggleButton>
+                        </StackPanel>
+                        <TextBox Grid.Row="1" Grid.Column="1" Height="20" Width="80" Name="uxUnitsTxt" HorizontalAlignment="Left" Text="0.00000000" TextAlignment="Right" MaxLength="10" LostFocus="uxUnitsTxt_LostFocus" PreviewTextInput="TextBox_OnPreviewTextInput"></TextBox>
+                        <ComboBox Grid.Row="0" Grid.Column="2" Height="20" Width="120" Text="Price" SelectionChanged="uxPriceCmbo_OnSelectionChanged" Name="uxPriceCmbo" SelectedIndex="0">
+                            <ComboBoxItem>Last</ComboBoxItem>
+                            <ComboBoxItem>Bid (Buy Price)</ComboBoxItem>
+                            <ComboBoxItem>Ask (Sell Price)</ComboBoxItem>
+                        </ComboBox>
+                        <ComboBox Grid.Row="2" Grid.Column="1" Height="20" Width="80" Text="Type" SelectedIndex="0" HorizontalAlignment="Left">
+                            <ComboBoxItem>Limit</ComboBoxItem>
+                        </ComboBox>
+                        <ComboBox Grid.Row="3" Grid.Column="1" Height="20" Width="200" SelectedIndex="0" HorizontalAlignment="Left" Name="uxTimeInForceCmbo" Grid.ColumnSpan="2">
+                            <ComboBoxItem>Good Until Cancelled (Instant)</ComboBoxItem>
+                            <ComboBoxItem>Scheduled (When Available)</ComboBoxItem>
+                        </ComboBox>
+                        <TextBox Grid.Row="4" Grid.Column="1" Height="20" HorizontalAlignment="Left" IsReadOnly="True" Width="80" Name="uxTotalTxt"  Text="0.00000000" MaxLength="10" TextAlignment="Right" PreviewTextInput="TextBox_OnPreviewTextInput"></TextBox>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Margin="0,0,0,0" Grid.Column="2" Name="uxStatGb" HorizontalAlignment="Right">
+                    <GroupBox.Header>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <Button HorizontalContentAlignment="Left" HorizontalAlignment="Left" Name="uxRefreshBtn" Style="{StaticResource GridButton}" Click="UxRefreshBtn_OnClick">
+                                <Button.Content>
+                                    <Image Source="{StaticResource RefreshBtn}" HorizontalAlignment="Left"></Image>
+                                </Button.Content>
+                            </Button>
+                            <Label Content="Ticker" FontFamily="Calibri" Foreground="{StaticResource TitleBrush}" FontWeight="Bold" FontSize="16"/>
+                        </StackPanel>
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0">Last</Label>
+                        <Label Grid.Row="1" Grid.Column="0">Volume (Ƀ)</Label>
+                        <Label Grid.Row="2" Grid.Column="0">Bid (Buy)</Label>
+                        <Label Grid.Row="3" Grid.Column="0">Ask (Sell)</Label>
+                        <Label Grid.Row="4" Grid.Column="0" Foreground="Navy">24hr High</Label>
+                        <Label Grid.Row="5" Grid.Column="0" Foreground="Red">24hr Low</Label>
+
+                        <Label Grid.Row="0" Grid.Column="1" Name="uxLastVl"></Label>
+                        <Label Grid.Row="1" Grid.Column="1" Name="uxVolVl"></Label>
+                        <Label Grid.Row="2" Grid.Column="1" Name="uxBidVl"></Label>
+                        <Label Grid.Row="3" Grid.Column="1" Name="uxAskVl"></Label>
+                        <Label Grid.Row="4" Grid.Column="1" Foreground="Navy" Name="uxHighVl"></Label>
+                        <Label Grid.Row="5" Grid.Column="1" Foreground="Red" Name="uxLowVl"></Label>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0">
+                <Button Width="120" Click="uxBuyBtn_Click" Margin="0,0,10,0" VerticalAlignment="Center" Name="uxBuyBtn" Height="30" FontSize="16">
+                    <Button.Content>
+                        <Grid HorizontalAlignment="Stretch" Width="113">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Viewbox Width="20" HorizontalAlignment="Left" Grid.Column="0" >
+                                <Grid>
+                                    <Grid Name="bg2" Width="32" Height="32" Visibility="Collapsed" />
+                                    <Path Data="M21.951999,24.340008C20.928992,24.340008 20.095987,25.161005 20.095987,26.17 20.095987,27.178996 20.928992,27.999992 21.951999,27.999992 22.976006,27.999992 23.809011,27.178996 23.809011,26.17 23.809011,25.161005 22.976006,24.340008 21.951999,24.340008z M11.476078,24.339988C10.452024,24.339988 9.619072,25.161029 9.6190717,26.169996 9.619072,27.178964 10.452024,28.000005 11.476078,28.000005 12.499034,28.000005 13.332047,27.178964 13.332047,26.169996 13.332047,25.161029 12.499034,24.339988 11.476078,24.339988z M21.951999,22.340017C24.079012,22.340017 25.809023,24.05801 25.809023,26.17 25.809023,28.281991 24.079012,29.999983 21.951999,29.999983 19.825986,29.999983 18.095975,28.281991 18.095975,26.17 18.095975,24.05801 19.825986,22.340017 21.951999,22.340017z M11.476078,22.339996C13.602068,22.339996 15.33206,24.058006 15.33206,26.169996 15.33206,28.281986 13.602068,29.999996 11.476078,29.999996 9.3490509,29.999996 7.6190594,28.281986 7.6190595,26.169996 7.6190594,24.058006 9.3490509,22.339996 11.476078,22.339996z M27.098042,4.5949917C27.322344,4.5952759 27.547892,4.6707726 27.73382,4.8260822 28.158798,5.1780777 28.216797,5.8080711 27.864813,6.234066L23.605024,11.370004 23.061051,11.404003C22.734068,11.404003,22.427083,11.260005,22.218094,11.008008L20.134197,8.4960384C19.782214,8.0700436 19.840212,7.4400511 20.26519,7.0880556 20.690169,6.7330599 21.322138,6.7950592 21.67312,7.2180538L23.062052,8.8920336 26.32589,4.9570808C26.523317,4.7185841,26.80965,4.5946255,27.098042,4.5949917z M23.999004,2C20.690005,2 17.999005,4.691 17.999005,8 17.999005,11.309 20.690005,14 23.999004,14 27.308004,14 29.999004,11.309 29.999004,8 29.999004,4.691 27.308004,2 23.999004,2z M23.999004,0C28.410006,0 31.999004,3.5890007 31.999004,8 31.999004,11.032562 30.302641,13.676601 27.809055,15.032977L27.539,15.171488 26.449272,19.562003C26.20727,20.421001,25.438261,21,24.571253,21L8.8100901,21C7.8980811,21,7.1200731,20.384001,6.9180711,19.502003L4.2120433,7.2970257 1.94102,7.3580256 2.0000205,9.137022C2.0000205,9.6890211 1.5520158,10.13702 1.0000105,10.13702 0.4470048,10.13702 0,9.6890211 0,9.137022L0,7.2840252C0,6.2230282,0.87100887,5.3580284,1.94102,5.3580284L4.2700436,5.3580284C5.1820533,5.3580284,5.9610612,5.9750271,6.1630634,6.8560266L8.8690912,19.062004 24.527252,19.000004 25.298761,15.893837 25.215645,15.907648C24.818842,15.968456 24.412537,16 23.999004,16 20.277224,16 17.140636,13.444941 16.251316,9.9968958L16.182571,9.6998043 8.8781284,8.4649668C8.334143,8.3719625 7.967153,7.855938 8.0591503,7.3109131 8.1396483,6.8357658 8.5371063,6.4984379 9.0070096,6.4798155 9.0741385,6.4771557 9.142746,6.480999 9.2121196,6.4918747L16.007433,7.6414919 16.009436,7.5889616C16.22412,3.3681927,19.725849,0,23.999004,0z" Stretch="Uniform" Fill="#FF000000" Width="32" Height="32" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+                                        <Path.RenderTransform>
+                                            <TransformGroup>
+                                                <TransformGroup.Children>
+                                                    <RotateTransform Angle="0" />
+                                                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                                                </TransformGroup.Children>
+                                            </TransformGroup>
+                                        </Path.RenderTransform>
+                                    </Path>
+                                </Grid>
+                            </Viewbox >
+                            <Label Grid.Column="1" Foreground="{StaticResource Back800}" HorizontalAlignment="Center" VerticalAlignment="Center">Buy</Label>
+                        </Grid>
+                       
+                    </Button.Content>
+                </Button>
+                <Button Name="uxChangeMarket" Margin="10,0,0,0" VerticalAlignment="Center" Click="uxSelectMarket_Click" Height="30" Width="120" FontSize="16">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Viewbox Width="20">
+                                <Grid>
+                                    <Grid Name="bg" Width="32" Height="32" Visibility="Collapsed" />
+                                    <Path Data="M14.522845,21.871246L31.100999,21.871246C31.601003,21.871246,31.999995,22.171253,31.999995,22.67026L31.999995,24.368277C31.999995,24.767283,31.601003,25.167282,31.100999,25.167282L14.522845,25.167282C14.023847,25.167282,13.623851,24.867283,13.623851,24.368277L13.623851,22.67026C13.52482,22.270254,13.92384,21.871246,14.522845,21.871246z M11.626823,12.184142L13.424844,13.981159 3.6377519,24.767283C2.738742,25.666288 1.340719,25.766287 0.54171602,24.967283 -0.25728743,24.16827 -0.15729567,22.77026 0.74171434,21.871246z M24.110946,10.886124C24.509936,10.886124 24.909932,11.085123 25.208947,11.38513 25.807952,11.984136 25.807952,12.983147 25.208947,13.682153L20.714887,18.176207C20.115884,18.775211 19.116881,18.775211 18.41787,18.176207 17.818866,17.5772 17.818866,16.578188 18.41787,15.879183L22.911929,11.38513C23.311927,10.985124,23.710917,10.886124,24.110946,10.886124z M15.920868,3.296042C16.120852,3.296042,16.320866,3.3950423,16.52085,3.4950417L21.912896,8.9880992C22.212918,9.288106,22.212918,9.7871123,21.912896,10.087118L17.119853,14.880172C16.819863,15.18017,16.320866,15.18017,16.020844,14.880172L10.627806,9.4871054C10.328807,9.1881066,10.328807,8.6881009,10.627806,8.3890935L15.421841,3.5950411C15.521848,3.3950423,15.721862,3.296042,15.920868,3.296042z M13.22483,0C13.623851,-1.4650232E-07 14.023847,0.20000667 14.323838,0.49900619 14.922843,1.0990111 14.922843,2.0970236 14.323838,2.7960368L9.8297947,7.1900831C9.2297982,7.7900882 8.2317875,7.7900882 7.5327762,7.1900831 6.9327801,6.5910769 6.9327801,5.5930649 7.6317762,4.9930597L12.12582,0.49900619C12.425826,0.20000667,12.825839,-1.4650232E-07,13.22483,0z" Stretch="Uniform" Fill="#FF000000" Width="32" Height="32" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+                                        <Path.RenderTransform>
+                                            <TransformGroup>
+                                                <TransformGroup.Children>
+                                                    <RotateTransform Angle="0" />
+                                                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                                                </TransformGroup.Children>
+                                            </TransformGroup>
+                                        </Path.RenderTransform>
+                                    </Path>
+                                </Grid>
+                            </Viewbox>
+                            <Label Foreground="{StaticResource Back800}" HorizontalAlignment="Center" VerticalAlignment="Center">Change Market</Label>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+            <Separator Margin="10,20,10,0"></Separator>
+            <GroupBox>
+                <GroupBox.Header>
+                    <Label Content ="Scheduled Buys" Name="ScheduledBuysGrb" FontFamily="Calibri" Foreground="{StaticResource TitleBrush}" FontWeight="Bold" FontSize="16"/>
+                </GroupBox.Header>
+               <StackPanel>
+                <DataGrid Name="uxSchedules" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeRows="False"
+                              AutoGenerateColumns="False" HorizontalScrollBarVisibility="Auto" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Bid" Binding="{Binding Bid}" Width=".70*"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Qty" Binding="{Binding Qty}" Width=".70*"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Created" Binding="{Binding CreatedTime, StringFormat=dd/MM/yyyy HH:mm}" Width=".85*"></DataGridTextColumn>
+                        <DataGridCheckBoxColumn Header="Sent" Binding="{Binding IsSent}" Width="0.25*"></DataGridCheckBoxColumn>
+                        <DataGridTextColumn Header="Sent Date/Time" Binding="{Binding Sent, StringFormat=dd/MM/yyyy HH:mm}" Width=".85*"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Last Outcome" Binding="{Binding LastOutcome}" Width="1*"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                    <Label Content="No Scheduled Buys Have Been Found for this Currency on your System" Visibility="Collapsed" Name="uxNoBuysLbl" HorizontalAlignment="Center" FontFamily="Calibri" Foreground="{StaticResource Text800}" FontWeight="Bold" FontSize="16"/>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+    </Grid>
+</UserControl>

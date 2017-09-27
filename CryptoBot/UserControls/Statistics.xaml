@@ -1,0 +1,105 @@
+﻿<UserControl x:Class="CryptoBot.UserControls.Statistics"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CryptoBot"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:converters="clr-namespace:CryptoBot.Resources.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="500">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:NegativeToColorConverter x:Key="NegativeToColor"></converters:NegativeToColorConverter>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/Style.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="450*"/>
+            <ColumnDefinition Width="67*"/>
+        </Grid.ColumnDefinitions>
+       <ScrollViewer Grid.Column="0" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical" CanHorizontallyScroll="False">
+                <Grid x:Name="AvailableBalancesRoot">
+                    <GroupBox>
+                        <GroupBox.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <fa:ImageAwesome Icon="Spinner" Width="20" Height="20" Spin="true" SpinDuration="4" Visibility="Collapsed" Name="uxBalanceLoad" Foreground="{StaticResource Text900}" HorizontalAlignment="Left"/>
+                                <Label Content ="Available Balances" FontFamily="Calibri" Foreground="{StaticResource TitleBrush}" FontWeight="Bold" FontSize="16"/>
+                            </StackPanel>
+                        </GroupBox.Header>
+                        <DataGrid ScrollViewer.PanningMode="None" IsHitTestVisible="False" Name="uxAccountBalancesDg" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False" HorizontalScrollBarVisibility="Auto" IsReadOnly="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Currency" Binding="{Binding Currency}" Width="1*"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Balance" Binding="{Binding Balance}" Width="0.5*"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Available" Binding="{Binding Available}" Width="0.5*"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Pending" Binding="{Binding Pending}" Width="0.5*"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </GroupBox>
+                </Grid>
+               
+                <GroupBox Margin="0" Padding="0">
+                    <GroupBox.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <fa:ImageAwesome Icon="Spinner" Width="20" Height="20" Spin="true" SpinDuration="4" Visibility="Collapsed" Name="uxOrdersLoad" Foreground="{StaticResource Text900}" HorizontalAlignment="Left"/>
+                            <Label Content ="Open Orders" FontFamily="Calibri" Foreground="{StaticResource TitleBrush}" FontWeight="Bold" FontSize="16"/>
+                        </StackPanel>
+                    </GroupBox.Header>
+                    <DataGrid ScrollViewer.PanningMode="None" IsHitTestVisible="False" Name="uxOrdersDg" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeRows="False" 
+                              AutoGenerateColumns="False" HorizontalScrollBarVisibility="Auto" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Market" Binding="{Binding Exchange}" Width="70"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Order Type" Binding="{Binding OrderTypeFormatted}" Width=".8*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width=".8*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Limit" Binding="{Binding Limit}" Width="0.75*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Opened Date/Time" Binding="{Binding Opened, StringFormat=dd/MM/yyyy HH:mm}" Width="*"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+                <GroupBox>
+                    <GroupBox.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <fa:ImageAwesome Icon="Spinner" Width="20" Height="20" Spin="true" SpinDuration="4" Visibility="Collapsed" Name="uxInterestCurrenciesLoad" Foreground="{StaticResource Text900}" HorizontalAlignment="Left"/>
+                            <Label Content ="Currencies of Interest" FontFamily="Calibri" Foreground="{StaticResource TitleBrush}" FontWeight="Bold" FontSize="16"/>
+                        </StackPanel>
+                        
+                        
+                    </GroupBox.Header>
+                    <DataGrid ScrollViewer.PanningMode="None" IsHitTestVisible="False" Name="uxNotableDg" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False" HorizontalScrollBarVisibility="Auto" IsReadOnly="True">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="{x:Type DataGridRow}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=PreviousData}}" Value="{x:Null}">
+                                        <Setter Property="FontWeight" Value="Bold"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Market" Binding="{Binding MarketName}" Width="70"></DataGridTextColumn>
+                            <DataGridTextColumn Header="24 Hr. Low" Binding="{Binding Low}" Foreground="Red" Width=".9*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="24 Hr. High" Binding="{Binding High}" Foreground="DarkGreen" Width=".9*"></DataGridTextColumn>
+                            <!--<DataGridTextColumn Header="24 Hr. Open" Binding="{Binding PrevDay}" Width=".9*"></DataGridTextColumn>-->
+                            <DataGridTextColumn Header="24 Hr. Volume" Binding="{Binding Volume, StringFormat=0}" Width="0.9*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Last Updated" Binding="{Binding TimeStamp, StringFormat=dd/MM/yyyy HH:mm}" Width="1.1*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Buy Price" Binding="{Binding Bid}" Width=".8*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Sell Price" Binding="{Binding Ask}" Width=".8*"></DataGridTextColumn>
+                            <DataGridTemplateColumn Header="24 Hr. %"  Width=".65*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock FontWeight="Bold" TextAlignment="Right" Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}, Path=DataContext.ChangePercentage}" Foreground="{Binding ChangePercentage, Converter={StaticResource NegativeToColor}}"></TextBlock>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
