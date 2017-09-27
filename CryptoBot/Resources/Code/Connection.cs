@@ -134,22 +134,16 @@ namespace CryptoBot.Code.Connection
         public static int[] ProcessSchedules()
         {
             int[] count = new int[2] { 0, 0 };
-            Schedule schedule;
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(Schedule));
-            using (FileStream inputStream = new FileStream("Schedule.xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                var sr = new StreamReader(inputStream);
-                schedule = (Schedule)xmlSerializer.Deserialize(sr);
-            }
-
-            foreach (var market in schedule.Markets)
+            
+            foreach (var market in ScheduleHandler.MasterSchedule.Markets)
             {
                 //Process sells first
                 foreach (var order in market.Orders.Where(d => d.OrderType == OrderType.Sell && d.Sent == null))
                 {
                     try
                     {
-                        var askingPrice = FullMarketList.Where(d => d.MarketName == market.Name).FirstOrDefault()?.Ask;
+                        var askingPrice = FullMarketList.FirstOrDefault(d => d.MarketName == market.Name)?.Ask;
                         if (askingPrice != null && askingPrice > order.Bid)
                         {
                             order.Bid = (decimal)askingPrice;
@@ -177,7 +171,7 @@ namespace CryptoBot.Code.Connection
                 {
                     try
                     {
-                        var askingPrice = FullMarketList.Where(d => d.MarketName == market.Name).FirstOrDefault()?.Bid;
+                        var askingPrice = FullMarketList.FirstOrDefault(d => d.MarketName == market.Name)?.Bid;
                         if (askingPrice != null && askingPrice < order.Bid)
                         {
                             order.Bid = (decimal)askingPrice;
@@ -201,13 +195,7 @@ namespace CryptoBot.Code.Connection
                     }
                 }
             }
-            //Serialise
-            using (FileStream outputStream = new FileStream("schedule.xml", FileMode.Open, FileAccess.Write, FileShare.ReadWrite))
-            {
-                ;
-                var sw = new StreamWriter(outputStream);
-                xmlSerializer.Serialize(sw, schedule);
-            }
+            ScheduleHandler.SaveMasterSchedule();
             return count;
         }
 

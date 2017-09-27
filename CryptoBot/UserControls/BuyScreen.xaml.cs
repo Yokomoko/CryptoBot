@@ -208,6 +208,7 @@ namespace CryptoBot.UserControls
             {
                 ScheduleHandler.AddOrder(SelectedMarket.MarketName, order);
                 MessageBox.Show($"Order has been scheduled and will complete when you have {uxTotalTxt.Text} {baseCurrency} available");
+                PopulateGrid();
                 return;
             }
             else
@@ -245,14 +246,7 @@ namespace CryptoBot.UserControls
         {
             try
             {
-                Schedule schedule;
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(Schedule));
-                using (FileStream inputStream = new FileStream("Schedule.xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                {
-                    StreamReader streamReader = new StreamReader(inputStream);
-                    schedule = (Schedule)xmlSerializer.Deserialize(streamReader);
-                }
-                var markets = schedule.Markets.FirstOrDefault(d => d.Name == SelectedMarket.MarketName);
+                var markets = ScheduleHandler.MasterSchedule.Markets.FirstOrDefault(d => d.Name == SelectedMarket.MarketName);
 
                 Binding b = new Binding();
                 b.Mode = BindingMode.OneWay;

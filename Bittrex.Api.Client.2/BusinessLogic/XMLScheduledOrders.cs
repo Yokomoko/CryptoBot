@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.IO;
+using System.Xml.Linq;
 
 namespace BusinessLayer.BusinessLogic
 {
@@ -16,30 +17,58 @@ namespace BusinessLayer.BusinessLogic
 
     public class ScheduleHandler
     {
-        public static bool AddOrder(string marketName, Order anOrder)
+        public static Schedule MasterSchedule { get; set; }
+
+
+        public static void LoadMasterScheduleFromFile()
         {
-            Schedule schedule;
-            marketName = marketName.ToUpper().Trim();
+            //If there is no schedule.xml file. Create one now
+            if (!File.Exists("Schedule.xml"))
+            {
+                using (FileStream outputStream = new FileStream("Schedule.xml", FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
+                {
+                    XmlSerializer s = new XmlSerializer(typeof(Schedule));
+                    StreamWriter sw = new StreamWriter(outputStream);
+                    s.Serialize(sw, MasterSchedule);
+                }
+            }
+
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(Schedule));
-            using (FileStream inputStream = new FileStream("Schedule.xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                var sr = new StreamReader(inputStream);
-                schedule = (Schedule)xmlSerializer.Deserialize(sr);
+            try{
+                using (FileStream inputStream = new FileStream("Schedule.xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite)){
+                    var sr = new StreamReader(inputStream);
+                    MasterSchedule = (Schedule) xmlSerializer.Deserialize(sr);
+                }
             }
-            if (!schedule.Markets.Any(d => d.Name == marketName))
-            {
-                schedule.Markets.Add(new Market { Name = marketName, Orders = new List<Order>() });
+            catch{
+                throw new Exception("XML File is Malformed");
             }
-            Market market = schedule.Markets.FirstOrDefault(d => d.Name == marketName);
 
-            //RemoveOrder(marketName, anOrder);
-            market.Orders.Add(anOrder);
+        }
 
+        public static void SaveMasterSchedule()
+        {
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Schedule));
             //Serialise
             using (FileStream outputStream = new FileStream("Schedule.xml", FileMode.Truncate, FileAccess.Write, FileShare.ReadWrite))
             {
                 StreamWriter sw = new StreamWriter(outputStream);
-                xmlSerializer.Serialize(sw, schedule);
+                xmlSerializer.Serialize(sw, MasterSchedule);
+            }
+        }
+
+        public static bool AddOrder(string marketName, Order anOrder)
+        {
+            if (MasterSchedule == null) LoadMasterScheduleFromFile();
+            if (MasterSchedule != null && MasterSchedule.Markets.All(d => d.Name != marketName))
+            {
+                MasterSchedule.Markets.Add(new Market { Name = marketName, Orders = new List<Order>() });
+            }
+            if (MasterSchedule != null)
+            {
+                Market market = MasterSchedule.Markets.FirstOrDefault(d => d.Name == marketName);
+
+                market?.Orders.Add(anOrder);
             }
 
             return true;
@@ -47,40 +76,21 @@ namespace BusinessLayer.BusinessLogic
 
         public static void RemoveOrder(string marketName, Order anOrder)
         {
-            Schedule schedule;
             marketName = marketName.ToUpper().Trim();
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Schedule));
-            using (Stream inputStream = File.OpenRead("Schedule.xml"))
-            {
-                schedule = (Schedule)xmlSerializer.Deserialize(inputStream);
-            }
-            Market market = schedule.Markets.FirstOrDefault(d => d.Name == marketName);
+
+            Market market = MasterSchedule.Markets.FirstOrDefault(d => d.Name == marketName);
 
             if (market != null && market.Orders.Any(id => id.OrderId == anOrder.OrderId))
             {
                 market.Orders.Remove(anOrder);
             }
-            //Serialise
-            //todo turn this into filestream if required to be used at a later date
-            using (Stream outputStream = File.OpenWrite("Schedule.xml"))
-            {
-                xmlSerializer.Serialize(outputStream, schedule);
-            }
         }
 
         public static List<Order> GetOrders(string marketName)
         {
-            Schedule schedule;
             marketName = marketName.ToUpper().Trim();
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Schedule));
-
-            using (FileStream inputStream = new FileStream("Schedule.xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                var sr = new StreamReader(inputStream);
-                schedule = (Schedule)xmlSerializer.Deserialize(sr);
-            }
-            var market = schedule.Markets.Where(d => d.Name == marketName);
-            return market.FirstOrDefault().Orders;
+            var market = MasterSchedule.Markets.Where(d => d.Name == marketName);
+            return market.FirstOrDefault()?.Orders;
         }
 
     }
@@ -123,13 +133,11 @@ namespace BusinessLayer.BusinessLogic
 
         [XmlElement]
         public DateTime CreatedTime { get; set; } = DateTime.Now;
-        public decimal OrderTotal
-        {
+        public decimal OrderTotal {
             get { return Qty * Bid; }
             set { }
         }
-        public bool IsSent
-        {
+        public bool IsSent {
             get { return Sent != null; }
             set { }
         }

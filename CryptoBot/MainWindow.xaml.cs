@@ -46,14 +46,10 @@ namespace CryptoBot
                     Stats.Visibility = Visibility.Visible;
                 }
             }
-
-
-            //var win2 = new MarketSelector();
-            //win2.ShowDialog();
-            //if (win2.DialogResult == true)
-            //{
-            //    var mkt = win2.SelectedMarket;
-            //}
+            else
+            {
+                Stats.Visibility = Visibility.Visible;
+            }
         }
 
         private void UxBuyBtn_OnClick(object sender, RoutedEventArgs e)
@@ -96,7 +92,8 @@ namespace CryptoBot
             Title = "CryptoBot - Settings";
         }
 
-        private void UxDonateBtn_OnClick(object sender, RoutedEventArgs e){
+        private void UxDonateBtn_OnClick(object sender, RoutedEventArgs e)
+        {
             Stats.Visibility = Visibility.Collapsed;
             Buy.Visibility = Visibility.Collapsed;
             SettingsUc.Visibility = Visibility.Collapsed;
