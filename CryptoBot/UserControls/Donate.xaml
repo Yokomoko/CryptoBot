@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="CryptoBot.UserControls.Donate"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CryptoBot"
+             xmlns:converters="clr-namespace:CryptoBot.Resources.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="500">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:NegativeToColorConverter x:Key="NegativeToColor"></converters:NegativeToColorConverter>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/Style.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Margin="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" FontSize="14">Writing, supporting and maintaining applications takes time. This application is free forever and created to simplify the day-to-day trading of cryptocurrencies in Bittrex.</TextBlock>
+            <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center">If you are able, please donate what you can to any of the following addresses (Ensuring that you use the correct one for the currency that you're sending!) to support the developers.</TextBlock>
+        </StackPanel>
+        <GroupBox Grid.Row="1">
+            <GroupBox.Header>
+                <Label Content ="Filter" Name="Addresses" FontFamily="Calibri" Foreground="{StaticResource TitleBrush}" FontWeight="Bold" FontSize="16"/>
+            </GroupBox.Header>
+            <StackPanel Orientation="Horizontal">
+                <Label VerticalContentAlignment="Center">Search</Label>
+                <TextBox Height="20" Width="100" Typography.Capitals="AllSmallCaps" Name="uxName" TextChanged="UxName_OnTextChanged"></TextBox>
+            </StackPanel>
+        </GroupBox>
+        <DataGrid Grid.Row="2" AutoGenerateColumns="False" Name="uxDonateGrid" SelectionUnit="Cell" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeRows="False"
+                  HorizontalScrollBarVisibility="Auto" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Symbol" Binding="{Binding Abbreviation}" Width="0.11*"></DataGridTextColumn>
+                <DataGridTextColumn Header="Name" Binding="{Binding Label}" Width="0.2*"></DataGridTextColumn>
+                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="0.5*"></DataGridTextColumn>
+                <DataGridTextColumn Header="Tag / Additional" Binding="{Binding Tag}" Width="0.3*"></DataGridTextColumn>
+            </DataGrid.Columns>
+            
+        </DataGrid>
+        
+    </Grid>
+
+</UserControl>

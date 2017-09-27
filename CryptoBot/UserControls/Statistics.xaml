@@ -24,7 +24,7 @@
        <ScrollViewer Grid.Column="0" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Auto">
             <StackPanel Orientation="Vertical" CanHorizontallyScroll="False">
                 <Grid x:Name="AvailableBalancesRoot">
-                    <GroupBox>
+                    <GroupBox MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown">
                         <GroupBox.Header>
                             <StackPanel Orientation="Horizontal">
                                 <fa:ImageAwesome Icon="Spinner" Width="20" Height="20" Spin="true" SpinDuration="4" Visibility="Collapsed" Name="uxBalanceLoad" Foreground="{StaticResource Text900}" HorizontalAlignment="Left"/>

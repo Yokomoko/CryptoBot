@@ -71,6 +71,7 @@ namespace CryptoBot
             Buy.Visibility = Visibility.Collapsed;
             SettingsUc.Visibility = Visibility.Collapsed;
             Sell.Visibility = Visibility.Collapsed;
+            Donate.Visibility = Visibility.Collapsed;
             Title = "CryptoBot - Statistics";
         }
 
@@ -79,6 +80,7 @@ namespace CryptoBot
             Stats.Visibility = Visibility.Collapsed;
             Buy.Visibility = Visibility.Collapsed;
             SettingsUc.Visibility = Visibility.Collapsed;
+            Donate.Visibility = Visibility.Collapsed;
             Sell.Visibility = Visibility.Visible;
             Sell.Populate();
         }
@@ -88,9 +90,20 @@ namespace CryptoBot
             Stats.Visibility = Visibility.Collapsed;
             Buy.Visibility = Visibility.Collapsed;
             SettingsUc.Visibility = Visibility.Visible;
+            Donate.Visibility = Visibility.Collapsed;
             Sell.Visibility = Visibility.Collapsed;
             SettingsUc.Populate();
             Title = "CryptoBot - Settings";
+        }
+
+        private void UxDonateBtn_OnClick(object sender, RoutedEventArgs e){
+            Stats.Visibility = Visibility.Collapsed;
+            Buy.Visibility = Visibility.Collapsed;
+            SettingsUc.Visibility = Visibility.Collapsed;
+            Sell.Visibility = Visibility.Collapsed;
+            Donate.Visibility = Visibility.Visible;
+
+            Title = "CryptoBot - Donation";
         }
     }
 }

@@ -87,6 +87,9 @@
     <Compile Include="UserControls\BuyScreen.xaml.cs">
       <DependentUpon>BuyScreen.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\Donate.xaml.cs">
+      <DependentUpon>Donate.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
@@ -124,6 +127,10 @@
     <Page Include="UserControls\BuyScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Donate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControls\Settings.xaml">
       <Generator>MSBuild:Compile</Generator>

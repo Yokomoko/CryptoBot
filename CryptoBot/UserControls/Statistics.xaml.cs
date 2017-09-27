@@ -129,5 +129,9 @@ namespace CryptoBot.UserControls
                 uxInterestCurrenciesLoad.Visibility = Visibility.Visible;
             }
         }
+
+        private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e){
+         //   uxAccountBalancesDg.Visibility = uxAccountBalancesDg.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+        }
     }
 }
