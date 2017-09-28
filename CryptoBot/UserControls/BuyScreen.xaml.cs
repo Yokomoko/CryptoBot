@@ -113,7 +113,8 @@ namespace CryptoBot.UserControls
         private void uxSelectMarket_Click(object sender, RoutedEventArgs e)
         {
             Window parentWindow = Window.GetWindow(this);
-            var win = new MarketSelector {
+            var win = new MarketSelector
+            {
                 Owner = parentWindow,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
@@ -158,14 +159,14 @@ namespace CryptoBot.UserControls
                 switch (uxPriceCmbo.SelectedIndex)
                 {
                     case 0:
-                    uxBidTxt.Text = SelectedMarket?.Last.ToString() ?? "0.00000000";
-                    break;
+                        uxBidTxt.Text = SelectedMarket?.Last.ToString() ?? "0.00000000";
+                        break;
                     case 1:
-                    uxBidTxt.Text = SelectedMarket?.Bid.ToString() ?? "0.00000000";
-                    break;
+                        uxBidTxt.Text = SelectedMarket?.Bid.ToString() ?? "0.00000000";
+                        break;
                     case 2:
-                    uxBidTxt.Text = SelectedMarket?.Ask.ToString() ?? "0.00000000";
-                    break;
+                        uxBidTxt.Text = SelectedMarket?.Ask.ToString() ?? "0.00000000";
+                        break;
                 }
                 Populate();
             }
@@ -198,11 +199,14 @@ namespace CryptoBot.UserControls
                 return;
             }
 
-            var order = new Order();
-            order.Bid = decimal.Parse(uxBidTxt.Text);
-            order.Qty = decimal.Parse(uxUnitsTxt.Text);
-            order.OrderType = OrderType.Buy;
-            order.Expiry = DateTime.Now.AddDays(7);
+            var order = new Order
+            {
+                MarketName = SelectedMarket.MarketName,
+                Bid = decimal.Parse(uxBidTxt.Text),
+                Qty = decimal.Parse(uxUnitsTxt.Text),
+                OrderType = OrderType.Buy,
+                Expiry = DateTime.Now.AddDays(7)
+            };
 
             if (uxTimeInForceCmbo.SelectedIndex == 1)
             {
@@ -246,14 +250,14 @@ namespace CryptoBot.UserControls
         {
             try
             {
-                var markets = ScheduleHandler.MasterSchedule.Markets.FirstOrDefault(d => d.Name == SelectedMarket.MarketName);
+                var orders = ScheduleHandler.MasterSchedule.Orders.Where(d => d.MarketName == SelectedMarket.MarketName && d.OrderType == OrderType.Buy).OrderByDescending(d => d.Sent ?? DateTime.Today.AddYears(-50)).ThenBy(f => f.CreatedTime);
 
                 Binding b = new Binding();
                 b.Mode = BindingMode.OneWay;
-                b.Source = markets?.Orders.Where(t => t.OrderType == OrderType.Buy).OrderByDescending(d => d.Sent ?? DateTime.Today.AddYears(-50)).ThenBy(f => f.CreatedTime);
+                b.Source = orders;
 
 
-                if (markets == null || markets.Orders.Count == 0)
+                if (!orders.Any())
                 {
                     uxNoBuysLbl.Visibility = Visibility.Visible;
                     uxSchedules.Visibility = Visibility.Collapsed;

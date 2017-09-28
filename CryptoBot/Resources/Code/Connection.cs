@@ -16,7 +16,7 @@ using System.Xml.Serialization;
 using System.IO;
 
 
-namespace CryptoBot.Code.Connection 
+namespace CryptoBot.Code.Connection
 {
     public class Connection
     {
@@ -27,7 +27,8 @@ namespace CryptoBot.Code.Connection
         public static List<AccountBalance> AccountBalances { get; set; } = new List<AccountBalance>();
 
         private static List<string> _notableCurrenciesList;
-        public static List<string> NotableCurrenciesList {
+        public static List<string> NotableCurrenciesList
+        {
             get { return _notableCurrenciesList ?? (_notableCurrenciesList = new List<string>()); }
             set { _notableCurrenciesList = value; }
         }
@@ -96,14 +97,7 @@ namespace CryptoBot.Code.Connection
         public static decimal? GetMinimumBuyForCurrency(string currency)
         {
             var market = Markets.FirstOrDefault(d => d.MarketCurrency.ToString().ToUpper().Trim() == currency.ToUpper().Trim());
-            if (market != null)
-            {
-                return market.MinTradeSize;
-            }
-            else
-            {
-                return null;
-            }
+            return market?.MinTradeSize;
         }
 
         private static void PopulateNotableCurrencies()
@@ -134,65 +128,69 @@ namespace CryptoBot.Code.Connection
         public static int[] ProcessSchedules()
         {
             int[] count = new int[2] { 0, 0 };
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Schedule));
-            
-            foreach (var market in ScheduleHandler.MasterSchedule.Markets)
+            //Process sells first
+            foreach (var order in ScheduleHandler.MasterSchedule.Orders.Where(d => d.OrderType == OrderType.Sell && d.Sent == null))
             {
-                //Process sells first
-                foreach (var order in market.Orders.Where(d => d.OrderType == OrderType.Sell && d.Sent == null))
+                try
                 {
-                    try
+                    var bidPrice = FullMarketList.FirstOrDefault(d => d.MarketName == order.MarketName)?.Bid;
+                    if (bidPrice != null && bidPrice > order.Bid)
                     {
-                        var askingPrice = FullMarketList.FirstOrDefault(d => d.MarketName == market.Name)?.Ask;
-                        if (askingPrice != null && askingPrice > order.Bid)
-                        {
-                            order.Bid = (decimal)askingPrice;
-                        }
-
-                        var task = new Task<Task>(async () =>
-                        {
-                            await SendSellOrder(market.Name, order);
-                        });
-                        task.Start();
-                        task.Wait();
-                        task.Result.Wait();
-                        order.Sent = DateTime.Now;
-                        order.LastOutcome = "Success";
-                        count[0] += 1;
-
+                        order.ActualBid = (decimal)bidPrice;
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        order.LastOutcome = ex.InnerException.Message;
+                        order.ActualBid = order.Bid;
                     }
+
+                    var task = new Task<Task>(async () =>
+                    {
+                        await SendSellOrder(order.MarketName, order);
+                    });
+                    task.Start();
+                    task.Wait();
+                    task.Result.Wait();
+                    order.Sent = DateTime.Now;
+
+                    order.LastOutcome = "Success";
+                    count[0] += 1;
                 }
-                //Process buys next
-                foreach (var order in market.Orders.Where(d => d.OrderType == OrderType.Buy && d.Sent == null))
+                catch (Exception ex)
                 {
-                    try
-                    {
-                        var askingPrice = FullMarketList.FirstOrDefault(d => d.MarketName == market.Name)?.Bid;
-                        if (askingPrice != null && askingPrice < order.Bid)
-                        {
-                            order.Bid = (decimal)askingPrice;
-                        }
+                    order.LastOutcome = ex.InnerException.Message;
+                }
+            }
 
-                        var task = new Task<Task>(async () =>
-                        {
-                            await SendBuyOrder(market.Name, order);
-                        });
-                        task.Start();
-                        task.Wait();
-                        task.Result.Wait();
-                        order.Sent = DateTime.Now;
-                        order.LastOutcome = "Success";
-                        count[0] += 1;
-
-                    }
-                    catch (Exception ex)
+            //Process buys next
+            foreach (var order in ScheduleHandler.MasterSchedule.Orders.Where(d => d.OrderType == OrderType.Buy && d.Sent == null))
+            {
+                try
+                {
+                    var askingPrice = FullMarketList.FirstOrDefault(d => d.MarketName == order.MarketName)?.Bid;
+                    if (askingPrice != null && askingPrice < order.Bid)
                     {
-                        order.LastOutcome = ex.InnerException.Message;
+                        order.ActualBid = (decimal)askingPrice;
                     }
+                    else
+                    {
+                        order.ActualBid = order.Bid;
+                    }
+
+                    var task = new Task<Task>(async () =>
+                {
+                    await SendBuyOrder(order.MarketName, order);
+                });
+                    task.Start();
+                    task.Wait();
+                    task.Result.Wait();
+                    order.Sent = DateTime.Now;
+                    order.LastOutcome = "Success";
+                    count[1] += 1;
+
+                }
+                catch (Exception ex)
+                {
+                    order.LastOutcome = ex.InnerException.Message;
                 }
             }
             ScheduleHandler.SaveMasterSchedule();
@@ -202,20 +200,20 @@ namespace CryptoBot.Code.Connection
 
         public static async Task SendBuyOrder(string marketName, Order order)
         {
-            var buy = await bittrexClient.BuyLimit(marketName, order.Qty, order.Bid);
+            var buy = await bittrexClient.BuyLimit(marketName, order.Qty, order.ActualBid);
             if (!buy.Success)
             {
-                throw new Exception(buy.Message.ToString(), null);
+                throw new Exception(buy.Message, null);
             }
         }
 
         public static async Task SendSellOrder(string marketName, Order order)
         {
 
-            var sell = await bittrexClient.SellLimit(marketName, order.Qty, order.Bid);
+            var sell = await bittrexClient.SellLimit(marketName, order.Qty, order.ActualBid);
             if (!sell.Success)
             {
-                throw new Exception(sell.Message.ToString());
+                throw new Exception(sell.Message);
             }
         }
     }

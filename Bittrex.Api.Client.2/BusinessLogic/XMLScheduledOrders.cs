@@ -25,6 +25,7 @@ namespace BusinessLayer.BusinessLogic
             //If there is no schedule.xml file. Create one now
             if (!File.Exists("Schedule.xml"))
             {
+                MasterSchedule = new Schedule();
                 using (FileStream outputStream = new FileStream("Schedule.xml", FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
                 {
                     XmlSerializer s = new XmlSerializer(typeof(Schedule));
@@ -34,13 +35,16 @@ namespace BusinessLayer.BusinessLogic
             }
 
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(Schedule));
-            try{
-                using (FileStream inputStream = new FileStream("Schedule.xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite)){
+            try
+            {
+                using (FileStream inputStream = new FileStream("Schedule.xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
                     var sr = new StreamReader(inputStream);
-                    MasterSchedule = (Schedule) xmlSerializer.Deserialize(sr);
+                    MasterSchedule = (Schedule)xmlSerializer.Deserialize(sr);
                 }
             }
-            catch{
+            catch
+            {
                 throw new Exception("XML File is Malformed");
             }
 
@@ -60,37 +64,22 @@ namespace BusinessLayer.BusinessLogic
         public static bool AddOrder(string marketName, Order anOrder)
         {
             if (MasterSchedule == null) LoadMasterScheduleFromFile();
-            if (MasterSchedule != null && MasterSchedule.Markets.All(d => d.Name != marketName))
-            {
-                MasterSchedule.Markets.Add(new Market { Name = marketName, Orders = new List<Order>() });
-            }
+
             if (MasterSchedule != null)
             {
-                Market market = MasterSchedule.Markets.FirstOrDefault(d => d.Name == marketName);
-
-                market?.Orders.Add(anOrder);
+                MasterSchedule.Orders.Add(anOrder);
+                return true;
             }
-
-            return true;
+            return false;
         }
 
-        public static void RemoveOrder(string marketName, Order anOrder)
-        {
-            marketName = marketName.ToUpper().Trim();
 
-            Market market = MasterSchedule.Markets.FirstOrDefault(d => d.Name == marketName);
-
-            if (market != null && market.Orders.Any(id => id.OrderId == anOrder.OrderId))
-            {
-                market.Orders.Remove(anOrder);
-            }
-        }
 
         public static List<Order> GetOrders(string marketName)
         {
             marketName = marketName.ToUpper().Trim();
-            var market = MasterSchedule.Markets.Where(d => d.Name == marketName);
-            return market.FirstOrDefault()?.Orders;
+            var orders = MasterSchedule.Orders.Where(d => d.MarketName == marketName);
+            return orders.ToList();
         }
 
     }
@@ -98,21 +87,15 @@ namespace BusinessLayer.BusinessLogic
     [XmlRoot("Schedule")]
     public class Schedule
     {
-        [XmlElement(ElementName = "Market")]
-        public List<Market> Markets { get; set; }
-    }
-
-    public class Market
-    {
-        [XmlAttribute]
-        public string Name { get; set; }
-
-        [XmlElement(ElementName = "Orders")]
+        [XmlElement(ElementName = "Order")]
         public List<Order> Orders { get; set; }
     }
 
     public class Order
     {
+        [XmlAttribute]
+        public string MarketName { get; set; }
+
         [XmlAttribute]
         public Guid OrderId => Guid.NewGuid();
 
@@ -121,6 +104,9 @@ namespace BusinessLayer.BusinessLogic
 
         [XmlElement]
         public decimal Bid { get; set; }
+
+        [XmlElement]
+        public decimal ActualBid { get; set; }
 
         [XmlElement]
         public decimal Qty { get; set; }
@@ -141,6 +127,8 @@ namespace BusinessLayer.BusinessLogic
             get { return Sent != null; }
             set { }
         }
+        [XmlElement]
+        public bool? IsContinuous { get; set; }
         [XmlElement]
         public string LastOutcome { get; set; }
     }

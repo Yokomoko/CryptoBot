@@ -27,8 +27,9 @@ namespace CryptoBot
         private static readonly Timer scheduleTimer = new Timer();
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-           
+            ScheduleHandler.LoadMasterScheduleFromFile();
             Task.Run(() => Populate());
+            
             timer.Interval = 10000;
             timer.AutoReset = true;
             timer.Elapsed += TimerOnElapsed;
@@ -37,7 +38,7 @@ namespace CryptoBot
             scheduleTimer.Elapsed += ScheduleTimer_Elapsed;
             scheduleTimer.Start();
             timer.Start();
-            ScheduleHandler.LoadMasterScheduleFromFile();
+            
         }
 
         private void Tb_TrayMouseDoubleClick(object sender, RoutedEventArgs e)

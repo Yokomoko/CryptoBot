@@ -30,7 +30,8 @@ namespace CryptoBot
             InitializeComponent();
             tb = (TaskbarIcon)FindResource("NotificationIcon");
             tb.Visibility = Visibility.Visible;
-            tb.TrayMouseDoubleClick += TbOnTrayMouseDoubleClick;
+            tb.TrayLeftMouseUp += TbOnTrayMouseDoubleClick;
+            tb.TrayBalloonTipClicked += (sender, args) => tb.HideBalloonTip();
 
             //#if DEBUG
             //            Settings.Default.APISecureKey = "";
@@ -121,17 +122,24 @@ namespace CryptoBot
             switch (this.WindowState)
             {
                 case WindowState.Maximized:
-                break;
+                    Show();
+                    BringIntoView();
+                    tb.Visibility = Visibility.Collapsed;
+                    ShowInTaskbar = true;
+                    break;
                 case WindowState.Minimized:
-                tb.ShowBalloonTip("Minimised to Taskbar", "The application will continue to run in the background and schedule your trades", BalloonIcon.Info);
-                tb.Visibility = Visibility.Visible;
+                    tb.ShowBalloonTip("Minimised to Taskbar", "The application will continue to run in the background and schedule your trades", BalloonIcon.Info);
+                    tb.Visibility = Visibility.Visible;
 
-                ShowInTaskbar = false;
-                break;
+                    ShowInTaskbar = false;
+                    break;
                 case WindowState.Normal:
-                tb.Visibility = Visibility.Collapsed;
-                ShowInTaskbar = true;
-                break;
+                    Activate();
+                    //Show();
+                    //BringIntoView();
+                    tb.Visibility = Visibility.Collapsed;
+                    ShowInTaskbar = true;
+                    break;
             }
         }
 

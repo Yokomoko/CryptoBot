@@ -7,7 +7,7 @@
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              xmlns:converters="clr-namespace:CryptoBot.Resources.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="500">
+             d:DesignHeight="450" d:DesignWidth="750">
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:NegativeToColorConverter x:Key="NegativeToColor"></converters:NegativeToColorConverter>
@@ -67,12 +67,10 @@
                             <fa:ImageAwesome Icon="Spinner" Width="20" Height="20" Spin="true" SpinDuration="4" Visibility="Collapsed" Name="uxInterestCurrenciesLoad" Foreground="{StaticResource Text900}" HorizontalAlignment="Left"/>
                             <Label Content ="Currencies of Interest" FontFamily="Calibri" Foreground="{StaticResource TitleBrush}" FontWeight="Bold" FontSize="16"/>
                         </StackPanel>
-                        
-                        
                     </GroupBox.Header>
                     <DataGrid ScrollViewer.PanningMode="None" IsHitTestVisible="False" Name="uxNotableDg" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False" HorizontalScrollBarVisibility="Auto" IsReadOnly="True">
                         <DataGrid.RowStyle>
-                            <Style TargetType="{x:Type DataGridRow}">
+                            <Style TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource {x:Type DataGridRow}}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=PreviousData}}" Value="{x:Null}">
                                         <Setter Property="FontWeight" Value="Bold"></Setter>
@@ -84,7 +82,6 @@
                             <DataGridTextColumn Header="Market" Binding="{Binding MarketName}" Width="70"></DataGridTextColumn>
                             <DataGridTextColumn Header="24 Hr. Low" Binding="{Binding Low}" Foreground="Red" Width=".9*"></DataGridTextColumn>
                             <DataGridTextColumn Header="24 Hr. High" Binding="{Binding High}" Foreground="DarkGreen" Width=".9*"></DataGridTextColumn>
-                            <!--<DataGridTextColumn Header="24 Hr. Open" Binding="{Binding PrevDay}" Width=".9*"></DataGridTextColumn>-->
                             <DataGridTextColumn Header="24 Hr. Volume" Binding="{Binding Volume, StringFormat=0}" Width="0.9*"></DataGridTextColumn>
                             <DataGridTextColumn Header="Last Updated" Binding="{Binding TimeStamp, StringFormat=dd/MM/yyyy HH:mm}" Width="1.1*"></DataGridTextColumn>
                             <DataGridTextColumn Header="Buy Price" Binding="{Binding Bid}" Width=".8*"></DataGridTextColumn>
@@ -99,7 +96,25 @@
                         </DataGrid.Columns>
                     </DataGrid>
                 </GroupBox>
-
+                <GroupBox>
+                    <GroupBox.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <fa:ImageAwesome Icon="Spinner" Width="20" Height="20" Spin="true" SpinDuration="4" Visibility="Collapsed" Name="uxSchedulesLoad" Foreground="{StaticResource Text900}" HorizontalAlignment="Left"/>
+                            <Label Content ="Pending Scheduled Orders" FontFamily="Calibri" Foreground="{StaticResource TitleBrush}" FontWeight="Bold" FontSize="16"/>
+                        </StackPanel>
+                    </GroupBox.Header>
+                    <DataGrid ScrollViewer.PanningMode="None" IsHitTestVisible="False" Name="UxScheduled" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False" HorizontalScrollBarVisibility="Auto" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Market" Binding="{Binding MarketName}" Width="70"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Order Type" Binding="{Binding OrderType}" Width=".8*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Quantity" Binding="{Binding Qty}" Width=".8*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Entered Value" Binding="{Binding Bid}" Width=".8*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Sent Value" Binding="{Binding Bid}" Width=".8*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Created" Binding="{Binding CreatedTime, StringFormat=dd/MM/yyyy HH:mm}" Width="1.1*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Last Outcome" Binding="{Binding LastOutcome}" Width=".8*"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
             </StackPanel>
         </ScrollViewer>
     </Grid>

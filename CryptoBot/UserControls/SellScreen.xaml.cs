@@ -200,6 +200,7 @@ namespace CryptoBot.UserControls
             }
 
             var order = new Order();
+            order.MarketName = SelectedMarket.MarketName;
             order.Bid = decimal.Parse(uxBidTxt.Text);
             order.Qty = decimal.Parse(uxUnitsTxt.Text);
             order.OrderType = OrderType.Sell;
@@ -209,7 +210,7 @@ namespace CryptoBot.UserControls
             {
                 ScheduleHandler.AddOrder(SelectedMarket.MarketName, order);
                 MessageBox.Show($"Order has been scheduled and will complete when you have {uxTotalTxt.Text} {currencyToBuy} available");
-                return;
+                PopulateGrid();
             }
             else
             {
@@ -253,13 +254,23 @@ namespace CryptoBot.UserControls
                     StreamReader streamReader = new StreamReader(inputStream);
                     schedule = (Schedule)xmlSerializer.Deserialize(streamReader);
                 }
-                var markets = schedule.Markets.Where(d => d.Name == SelectedMarket.MarketName).FirstOrDefault();
+                var orders = schedule.Orders.Where(d => d.MarketName == SelectedMarket.MarketName && d.OrderType == OrderType.Sell).OrderByDescending(d => d.Sent ?? DateTime.Today.AddYears(-50)).ThenBy(f => f.CreatedTime);
 
                 Binding b = new Binding();
                 b.Mode = BindingMode.OneWay;
-                b.Source = markets?.Orders.Where(t => t.OrderType == OrderType.Sell).OrderByDescending(d => d.Sent ?? DateTime.Today.AddYears(-50)).ThenBy(f => f.CreatedTime);
+                b.Source = orders;
 
-                uxSchedules.SetBinding(ItemsControl.ItemsSourceProperty, b);
+                if (!orders.Any())
+                {
+                    uxNoSellsLbl.Visibility = Visibility.Visible;
+                    uxSchedules.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    uxSchedules.SetBinding(ItemsControl.ItemsSourceProperty, b);
+                    uxSchedules.Visibility = Visibility.Visible;
+                    uxNoSellsLbl.Visibility = Visibility.Collapsed;
+                }
             }
             catch { }
 

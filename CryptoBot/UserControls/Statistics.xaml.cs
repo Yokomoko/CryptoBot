@@ -1,22 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using BusinessLayer.BusinessLogic;
 using BusinessLayer.Models;
 using CryptoBot.Code.Connection;
-using CryptoBot.Properties;
 
 namespace CryptoBot.UserControls
 {
@@ -25,16 +17,16 @@ namespace CryptoBot.UserControls
     /// </summary>
     public partial class Statistics : UserControl
     {
-        readonly Timer refreshTimer = new Timer();
+        readonly Timer _refreshTimer = new Timer();
         public Statistics()
         {
             InitializeComponent();
             SetLoadingVisibility(true);
             Populate();
-            refreshTimer.AutoReset = true;
-            refreshTimer.Interval = 30000;
-            refreshTimer.Elapsed += RefreshTimerOnElapsed;
-            refreshTimer.Start();
+            _refreshTimer.AutoReset = true;
+            _refreshTimer.Interval = 30000;
+            _refreshTimer.Elapsed += RefreshTimerOnElapsed;
+            _refreshTimer.Start();
         }
 
         private void RefreshTimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
@@ -65,6 +57,7 @@ namespace CryptoBot.UserControls
                         Dispatcher.Invoke(getOrders);
                         Dispatcher.Invoke(getBalances);
                         Dispatcher.Invoke(PopulateNotableFields);
+                        Dispatcher.Invoke(PopulateSchedules);
                     }
                 }
                 catch (Exception e)
@@ -74,13 +67,14 @@ namespace CryptoBot.UserControls
             }
         }
 
-        private void SetLoadingVisibility(bool Visible)
+        private void SetLoadingVisibility(bool visible)
         {
             Dispatcher.Invoke(() =>
             {
-                uxBalanceLoad.Visibility = Visible ? Visibility.Visible : Visibility.Collapsed;
-                uxOrdersLoad.Visibility = Visible ? Visibility.Visible : Visibility.Collapsed;
-                uxInterestCurrenciesLoad.Visibility = Visible ? Visibility.Visible : Visibility.Collapsed;
+                uxBalanceLoad.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+                uxOrdersLoad.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+                uxInterestCurrenciesLoad.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+                uxSchedulesLoad.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
             });
 
         }
@@ -89,7 +83,7 @@ namespace CryptoBot.UserControls
         {
             if (Connection.AccountBalances.Count(d => d.Balance > 0) > 0)
             {
-                uxAccountBalancesDg.ItemsSource = Code.Connection.Connection.AccountBalances.Where(d => d.Balance > 0);
+                uxAccountBalancesDg.ItemsSource = Connection.AccountBalances.Where(d => d.Balance > 0);
                 uxBalanceLoad.Visibility = Visibility.Collapsed;
             }
             else
@@ -130,8 +124,15 @@ namespace CryptoBot.UserControls
             }
         }
 
-        private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e){
-         //   uxAccountBalancesDg.Visibility = uxAccountBalancesDg.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+        private void PopulateSchedules()
+        {
+            UxScheduled.ItemsSource = ScheduleHandler.MasterSchedule?.Orders;
+            uxSchedulesLoad.Visibility = Visibility.Collapsed;
+        }
+
+        private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            //   uxAccountBalancesDg.Visibility = uxAccountBalancesDg.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }
