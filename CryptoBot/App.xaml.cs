@@ -11,6 +11,7 @@ using System.Xml;
 using System.Xml.Linq;
 using BusinessLayer.BusinessLogic;
 using CryptoBot.Code.Connection;
+using Hardcodet.Wpf.TaskbarNotification;
 
 
 namespace CryptoBot
@@ -20,10 +21,13 @@ namespace CryptoBot
     /// </summary>
     public partial class App : Application
     {
+        
+
         private static readonly Timer timer = new Timer();
         private static readonly Timer scheduleTimer = new Timer();
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+           
             Task.Run(() => Populate());
             timer.Interval = 10000;
             timer.AutoReset = true;
@@ -34,6 +38,11 @@ namespace CryptoBot
             scheduleTimer.Start();
             timer.Start();
             ScheduleHandler.LoadMasterScheduleFromFile();
+        }
+
+        private void Tb_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
+        {
+            Windows[0].WindowState = WindowState.Normal;
         }
 
         private void ScheduleTimer_Elapsed(object sender, ElapsedEventArgs e)

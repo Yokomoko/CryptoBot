@@ -14,6 +14,7 @@ using CryptoBot.Code.Connection;
 using CryptoBot.Dialogs;
 using CryptoBot.Properties;
 using CryptoBot.Setup;
+using Hardcodet.Wpf.TaskbarNotification;
 
 namespace CryptoBot
 {
@@ -22,10 +23,15 @@ namespace CryptoBot
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static TaskbarIcon tb;
         //Timer ValueTimer = new Timer();
         public MainWindow()
         {
             InitializeComponent();
+            tb = (TaskbarIcon)FindResource("NotificationIcon");
+            tb.Visibility = Visibility.Visible;
+            tb.TrayMouseDoubleClick += TbOnTrayMouseDoubleClick;
+
             //#if DEBUG
             //            Settings.Default.APISecureKey = "";
             //            Settings.Default.APISecureSecret = "";
@@ -44,12 +50,19 @@ namespace CryptoBot
                 if (window.DialogResult == true)
                 {
                     Stats.Visibility = Visibility.Visible;
+                    uxStatsBtn.IsChecked = true;
                 }
             }
             else
             {
                 Stats.Visibility = Visibility.Visible;
+                uxStatsBtn.IsChecked = true;
             }
+        }
+
+        private void TbOnTrayMouseDoubleClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            this.WindowState = WindowState.Normal;
         }
 
         private void UxBuyBtn_OnClick(object sender, RoutedEventArgs e)
@@ -58,6 +71,7 @@ namespace CryptoBot
             Stats.Visibility = Visibility.Collapsed;
             SettingsUc.Visibility = Visibility.Collapsed;
             Sell.Visibility = Visibility.Collapsed;
+            Donate.Visibility = Visibility.Collapsed;
             Buy.Populate();
         }
 
@@ -99,8 +113,31 @@ namespace CryptoBot
             SettingsUc.Visibility = Visibility.Collapsed;
             Sell.Visibility = Visibility.Collapsed;
             Donate.Visibility = Visibility.Visible;
-
             Title = "CryptoBot - Donation";
+        }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            switch (this.WindowState)
+            {
+                case WindowState.Maximized:
+                break;
+                case WindowState.Minimized:
+                tb.ShowBalloonTip("Minimised to Taskbar", "The application will continue to run in the background and schedule your trades", BalloonIcon.Info);
+                tb.Visibility = Visibility.Visible;
+
+                ShowInTaskbar = false;
+                break;
+                case WindowState.Normal:
+                tb.Visibility = Visibility.Collapsed;
+                ShowInTaskbar = true;
+                break;
+            }
+        }
+
+        private void MainWindow_OnClosing(object sender, CancelEventArgs e)
+        {
+            tb.Visibility = Visibility.Collapsed;
         }
     }
 }

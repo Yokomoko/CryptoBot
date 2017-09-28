@@ -54,9 +54,10 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Market" Binding="{Binding Exchange}" Width="70"></DataGridTextColumn>
                             <DataGridTextColumn Header="Order Type" Binding="{Binding OrderTypeFormatted}" Width=".8*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Opened Date/Time" Binding="{Binding Opened, StringFormat=dd/MM/yyyy HH:mm}" Width="*"></DataGridTextColumn>
                             <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width=".8*"></DataGridTextColumn>
                             <DataGridTextColumn Header="Limit" Binding="{Binding Limit}" Width="0.75*"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Opened Date/Time" Binding="{Binding Opened, StringFormat=dd/MM/yyyy HH:mm}" Width="*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Order Value" Binding="{Binding TradeValue}" Width="0.75*"></DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </GroupBox>

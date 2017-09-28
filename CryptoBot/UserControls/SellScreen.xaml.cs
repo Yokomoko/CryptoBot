@@ -89,6 +89,7 @@ namespace CryptoBot.UserControls
                     SellGroupBoxText.Content = "Sell " + SelectedMarket?.MarketName.Split('-')[1];
                     if (parentWindow != null) parentWindow.Title += ": " + SelectedMarket.MarketName;
                     uxSellSp.Visibility = Visibility.Visible;
+                    InitialPanel.Visibility = Visibility.Collapsed;
                     uxLastVl.Content = SelectedMarket.Last;
                     uxVolVl.Content = Math.Round(SelectedMarket.Volume, 2);
                     uxBidVl.Content = SelectedMarket.Bid;

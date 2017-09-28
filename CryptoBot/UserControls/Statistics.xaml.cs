@@ -32,7 +32,7 @@ namespace CryptoBot.UserControls
             SetLoadingVisibility(true);
             Populate();
             refreshTimer.AutoReset = true;
-            refreshTimer.Interval = 5000;
+            refreshTimer.Interval = 30000;
             refreshTimer.Elapsed += RefreshTimerOnElapsed;
             refreshTimer.Start();
         }

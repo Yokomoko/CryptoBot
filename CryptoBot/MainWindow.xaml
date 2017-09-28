@@ -8,7 +8,7 @@
         xmlns:UserControls="clr-namespace:CryptoBot.UserControls"
         Style="{DynamicResource {x:Type Window}}" ResizeMode="CanResizeWithGrip"
         mc:Ignorable="d" Icon="Bitcoin.ico" WindowStartupLocation="CenterScreen"
-        Title="Cryptobot - Statistics" Height="660.93" Width="750">
+        Title="Cryptobot - Statistics" Height="660.93" Width="750" StateChanged="Window_StateChanged" Closing="MainWindow_OnClosing">
     <Window.Resources>
         <ResourceDictionary>
             <converters:NegativeToColorConverter x:Key="NegativeToColor"></converters:NegativeToColorConverter>
@@ -20,14 +20,15 @@
     <Border BorderThickness="0" CornerRadius="0" BorderBrush="{StaticResource Back600}">
         <Grid >
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="450*"/>
-                <ColumnDefinition Width="67*"/>
+                <ColumnDefinition Width="247*"/>
+                <ColumnDefinition Width="76*"/>
+                <ColumnDefinition Width="48*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <Grid Background="{StaticResource Back600}" Grid.Row="0" Grid.ColumnSpan="2" Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid Background="{StaticResource Back600}" Grid.Row="0" Grid.ColumnSpan="3" Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <StackPanel Background="{StaticResource Back600}" Margin="0"  Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center">
                     <RadioButton Style="{StaticResource ImageRadioBtn}" GroupName="MainMenuItems" Name="uxBuyBtn" Padding="2" Height="30" Width="100" Margin="5,5,20,5" Click="UxBuyBtn_OnClick">
                         <RadioButton.Content>
@@ -61,7 +62,7 @@
                     </StackPanel>
                 </StackPanel>
             </Grid>
-            <ScrollViewer Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0" ScrollViewer.PanningMode="None">
+            <ScrollViewer Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0" ScrollViewer.PanningMode="None">
                 <Grid Margin="0">
                     <UserControls:Statistics HorizontalAlignment="Center" x:Name="Stats" Visibility="Collapsed" IsHitTestVisible="False"></UserControls:Statistics>
                     <UserControls:BuyScreen Visibility="Collapsed" x:Name="Buy"></UserControls:BuyScreen>

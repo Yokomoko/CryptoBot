@@ -28,5 +28,7 @@ namespace BusinessLayer.Models
         public String ConditionTarget { get; set; }
 
         public String OrderTypeFormatted => OrderType.Replace("_", " ");
+
+        public decimal TradeValue => Math.Round(Limit != 0 ? Quantity * Limit : 0,8);
     }
 }
