@@ -214,6 +214,7 @@
                               AutoGenerateColumns="False" HorizontalScrollBarVisibility="Auto" IsReadOnly="True">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Bid" Binding="{Binding Bid}" Width=".70*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Actual" Binding="{Binding ActualBid}" Width=".70*"></DataGridTextColumn>
                             <DataGridTextColumn Header="Qty" Binding="{Binding Qty}" Width=".70*"></DataGridTextColumn>
                             <DataGridTextColumn Header="Created" Binding="{Binding CreatedTime, StringFormat=dd/MM/yyyy HH:mm}" Width=".85*"></DataGridTextColumn>
                             <DataGridCheckBoxColumn Header="Sent" Binding="{Binding IsSent}" Width="0.25*"></DataGridCheckBoxColumn>

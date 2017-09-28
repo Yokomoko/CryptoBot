@@ -88,7 +88,7 @@ namespace CryptoBot.UserControls
                     uxSellSp.Visibility = Visibility.Visible;
                     InitialPanel.Visibility = Visibility.Collapsed;
                     uxLastVl.Content = SelectedMarket.Last;
-                    uxVolVl.Content = Math.Round(SelectedMarket.Volume, 2);
+                    uxVolVl.Content = Math.Round(SelectedMarket.BaseVolume, 2);
                     uxBidVl.Content = SelectedMarket.Bid;
                     uxAskVl.Content = SelectedMarket.Ask;
                     uxHighVl.Content = SelectedMarket.High;
@@ -209,11 +209,12 @@ namespace CryptoBot.UserControls
             if (uxTimeInForceCmbo.SelectedIndex == 1)
             {
                 ScheduleHandler.AddOrder(SelectedMarket.MarketName, order);
-                MessageBox.Show($"Order has been scheduled and will complete when you have {uxTotalTxt.Text} {currencyToBuy} available");
+                MessageBox.Show($"Order has been scheduled and will complete when you have {uxTotalTxt.Text} {baseCurrency} available");
                 PopulateGrid();
             }
             else
             {
+                order.ActualBid = order.Bid;
                 try
                 {
                     var task = new Task<Task>(async () =>
@@ -227,7 +228,8 @@ namespace CryptoBot.UserControls
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Failed to send order:\n{ex.InnerException.Message}");
+                    if (ex.InnerException != null)
+                        MessageBox.Show($"Failed to send order:\n{ex.InnerException.Message}");
                     return;
                 }
             }

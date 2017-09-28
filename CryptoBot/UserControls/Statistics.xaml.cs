@@ -52,13 +52,11 @@ namespace CryptoBot.UserControls
             {
                 try
                 {
-                    if (Visibility == Visibility.Visible)
-                    {
-                        Dispatcher.Invoke(getOrders);
-                        Dispatcher.Invoke(getBalances);
-                        Dispatcher.Invoke(PopulateNotableFields);
-                        Dispatcher.Invoke(PopulateSchedules);
-                    }
+                    if (Visibility != Visibility.Visible) return;
+                    Dispatcher.Invoke(getOrders);
+                    Dispatcher.Invoke(getBalances);
+                    Dispatcher.Invoke(PopulateNotableFields);
+                    Dispatcher.Invoke(PopulateSchedules);
                 }
                 catch (Exception e)
                 {

@@ -93,7 +93,7 @@ namespace CryptoBot.UserControls
                     uxBuySp.Visibility = Visibility.Visible;
                     InitialPanel.Visibility = Visibility.Collapsed;
                     uxLastVl.Content = SelectedMarket.Last;
-                    uxVolVl.Content = Math.Round(SelectedMarket.Volume, 2);
+                    uxVolVl.Content = Math.Round(SelectedMarket.BaseVolume, 2);
                     uxBidVl.Content = SelectedMarket.Bid;
                     uxAskVl.Content = SelectedMarket.Ask;
                     uxHighVl.Content = SelectedMarket.High;
@@ -217,6 +217,7 @@ namespace CryptoBot.UserControls
             }
             else
             {
+                order.ActualBid = order.Bid;
                 try
                 {
                     var task = new Task<Task>(async () =>
