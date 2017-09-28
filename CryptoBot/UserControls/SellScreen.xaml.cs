@@ -17,7 +17,7 @@ using System.Windows.Data;
 namespace CryptoBot.UserControls
 {
     /// <summary>
-    /// Interaction logic for BuyScreen.xaml
+    /// Interaction logic for SellScreen.xaml
     /// </summary>
     public partial class SellScreen : UserControl
     {
@@ -61,10 +61,7 @@ namespace CryptoBot.UserControls
                 var market = Connection.FullMarketList.FirstOrDefault(d => d.MarketName == SelectedMarket.MarketName);
                 if (market != null)
                 {
-                    Dispatcher.Invoke(() =>
-                    {
-                        PopulateTotal();
-                    });
+                    Dispatcher.Invoke(PopulateTotal);
 
                     SelectedMarket = market;
                     var baseCurrency = SelectedMarket.MarketName.Split('-')[0];
@@ -87,7 +84,7 @@ namespace CryptoBot.UserControls
                 {
                     Window parentWindow = Window.GetWindow(this);
                     SellGroupBoxText.Content = "Sell " + SelectedMarket?.MarketName.Split('-')[1];
-                    if (parentWindow != null) parentWindow.Title += ": " + SelectedMarket.MarketName;
+                    if (parentWindow != null) parentWindow.Title = "CryptoBot - Sell Screen: " + SelectedMarket.MarketName;
                     uxSellSp.Visibility = Visibility.Visible;
                     InitialPanel.Visibility = Visibility.Collapsed;
                     uxLastVl.Content = SelectedMarket.Last;
@@ -103,7 +100,9 @@ namespace CryptoBot.UserControls
             {
                 Dispatcher.Invoke(() =>
                 {
+                    Window parentWindow = Window.GetWindow(this);
                     uxSellSp.Visibility = Visibility.Collapsed;
+                    if (parentWindow != null) parentWindow.Title = "CryptoBot - Sell Screen";
                 });
             }
         }
@@ -111,8 +110,7 @@ namespace CryptoBot.UserControls
         private void uxSelectMarket_Click(object sender, RoutedEventArgs e)
         {
             Window parentWindow = Window.GetWindow(this);
-            var win = new MarketSelector
-            {
+            var win = new MarketSelector {
                 Owner = parentWindow,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
@@ -157,14 +155,14 @@ namespace CryptoBot.UserControls
                 switch (uxPriceCmbo.SelectedIndex)
                 {
                     case 0:
-                        uxBidTxt.Text = SelectedMarket?.Last.ToString() ?? "0.00000000";
-                        break;
+                    uxBidTxt.Text = SelectedMarket?.Last.ToString() ?? "0.00000000";
+                    break;
                     case 1:
-                        uxBidTxt.Text = SelectedMarket?.Bid.ToString() ?? "0.00000000";
-                        break;
+                    uxBidTxt.Text = SelectedMarket?.Bid.ToString() ?? "0.00000000";
+                    break;
                     case 2:
-                        uxBidTxt.Text = SelectedMarket?.Ask.ToString() ?? "0.00000000";
-                        break;
+                    uxBidTxt.Text = SelectedMarket?.Ask.ToString() ?? "0.00000000";
+                    break;
                 }
                 Populate();
             }
@@ -219,7 +217,7 @@ namespace CryptoBot.UserControls
                 {
                     var task = new Task<Task>(async () =>
                     {
-                        await Connection.SendBuyOrder(SelectedMarket.MarketName, order);
+                        await Connection.SendSellOrder(SelectedMarket.MarketName, order);
                     });
                     task.Start();
                     task.Wait();
@@ -248,20 +246,20 @@ namespace CryptoBot.UserControls
         {
             try
             {
-            Schedule schedule;
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Schedule));
-            using (FileStream inputStream = new FileStream("Schedule.xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                StreamReader streamReader = new StreamReader(inputStream);
-                schedule = (Schedule)xmlSerializer.Deserialize(streamReader);
-            }
-            var markets = schedule.Markets.Where(d => d.Name == SelectedMarket.MarketName).FirstOrDefault();
+                Schedule schedule;
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(Schedule));
+                using (FileStream inputStream = new FileStream("Schedule.xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    StreamReader streamReader = new StreamReader(inputStream);
+                    schedule = (Schedule)xmlSerializer.Deserialize(streamReader);
+                }
+                var markets = schedule.Markets.Where(d => d.Name == SelectedMarket.MarketName).FirstOrDefault();
 
-            Binding b = new Binding();
-            b.Mode = BindingMode.OneWay;
-            b.Source = markets?.Orders.Where(t => t.OrderType == OrderType.Sell).OrderByDescending(d => d.Sent ?? DateTime.Today.AddYears(-50)).ThenBy(f => f.CreatedTime);
+                Binding b = new Binding();
+                b.Mode = BindingMode.OneWay;
+                b.Source = markets?.Orders.Where(t => t.OrderType == OrderType.Sell).OrderByDescending(d => d.Sent ?? DateTime.Today.AddYears(-50)).ThenBy(f => f.CreatedTime);
 
-            uxSchedules.SetBinding(ItemsControl.ItemsSourceProperty, b);
+                uxSchedules.SetBinding(ItemsControl.ItemsSourceProperty, b);
             }
             catch { }
 
